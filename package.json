@@ -1,0 +1,36 @@
+{
+  "name": "namegen-1",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/text-encoding": "0.0.32",
+    "axios": "^0.17.1",
+    "deeplearn": "^0.3.11",
+    "essence-slider": "^1.0.11",
+    "javascript-debounce": "^1.0.0",
+    "material-ui": "^1.0.0-beta.21",
+    "material-ui-icons": "^1.0.0-beta.17",
+    "mobx": "^3.3.1",
+    "mobx-react": "^4.3.4",
+    "mobx-utils": "^3.2.1",
+    "prop-types": "^15.6.0",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-ga": "^2.3.5",
+    "react-scripts-ts": "2.8.0",
+    "text-encoding": "^0.6.4",
+    "typeface-roboto": "0.0.45"
+  },
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom",
+    "eject": "react-scripts-ts eject"
+  },
+  "devDependencies": {
+    "@types/jest": "^21.1.6",
+    "@types/node": "^8.0.53",
+    "@types/react": "^16.0.25",
+    "@types/react-dom": "^16.0.3"
+  }
+}

@@ -1,0 +1,50 @@
+{
+
+  "decoder/rnn/basic_lstm_cell/bias": {
+    "filename": "decoder_rnn_basic_lstm_cell_bias",
+    "shape": [
+      1024
+    ]
+  },
+
+  "decoder/rnn/basic_lstm_cell/kernel": {
+    "filename": "decoder_rnn_basic_lstm_cell_kernel",
+    "shape": [
+      320,
+      1024
+    ]
+  },
+  "dense/bias": {
+    "filename": "dense_bias",
+    "shape": [
+      256
+    ]
+  },
+  "dense/kernel": {
+    "filename": "dense_kernel",
+    "shape": [
+      256,
+      256
+    ]
+  },
+  "embedding": {
+    "filename": "embedding",
+    "shape": [
+      256,
+      64
+    ]
+  },
+  "encoder/rnn/basic_lstm_cell/bias": {
+    "filename": "encoder_rnn_basic_lstm_cell_bias",
+    "shape": [
+      1024
+    ]
+  },
+  "encoder/rnn/basic_lstm_cell/kernel": {
+    "filename": "encoder_rnn_basic_lstm_cell_kernel",
+    "shape": [
+      320,
+      1024
+    ]
+  }
+}

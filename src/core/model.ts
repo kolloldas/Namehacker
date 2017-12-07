@@ -1,4 +1,4 @@
-import { Array1D, Array2D, NDArray, NDArrayMathGPU, Scalar, /* util */ } from 'deeplearn';
+import { Array1D, Array2D, NDArray, NDArrayMath, NDArrayMathCPU, NDArrayMathGPU, Scalar, /* util */ } from 'deeplearn';
 import { TextEncoder, TextDecoder } from 'text-encoding';
 
 const _PAD = 0;
@@ -23,13 +23,13 @@ export default class Model {
     private hiddenSize: number;
     private embeddingSize: number;
 
-    private math: NDArrayMathGPU;
+    private math: NDArrayMath;
 
     private encoder: TextEncoder;
     private decoder: TextDecoder;
 
     constructor(vars: { [varName: string]: NDArray }) {
-        this.math = new NDArrayMathGPU();
+        this.math = this.getMathHandler(); // Temporary hack
 
         // Save the parameter variables
         this.encoderLstmKernel = vars['encoder/rnn/basic_lstm_cell/kernel'] as Array2D;
@@ -135,4 +135,15 @@ export default class Model {
         ];
     }
 
+    private getMathHandler(): NDArrayMath {
+        if ( navigator.userAgent.match('Edge') || navigator.vendor.match('Apple')) {
+            // tslint:disable-next-line:no-console
+            console.log('Using CPU');
+            return new NDArrayMathCPU();
+        } else {
+            // tslint:disable-next-line:no-console
+            console.log('Using GPU');
+            return new NDArrayMathGPU();
+        }
+    }
 }

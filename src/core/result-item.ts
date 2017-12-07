@@ -41,15 +41,15 @@ export class ResultItem {
     @action
     async checkDomainAvailability(ext: string = '.com') {
         
-        if (this.domains.get(ext) === AvailableStatus.UNKNOWN || 
-            this.domains.get(ext) === AvailableStatus.ERROR) {
+        if (process.env.REACT_APP_DOMAIN_CHECK_URL &&
+            (this.domains.get(ext) === AvailableStatus.UNKNOWN || 
+            this.domains.get(ext) === AvailableStatus.ERROR)) {
             this.domains.set(ext, AvailableStatus.CHECKING);
             const domain = this.text.replace('\'', '').replace('.com', '');
 
             try {
-                const res = await axios(`https://us-central1-name-generator-186718.cloudfunctions.net/godaddyProxy` + 
+                const res = await axios(process.env.REACT_APP_DOMAIN_CHECK_URL + 
                                         `?domain=${domain}${ext}`);
-                // const res = await axios(`http://192.168.1.121:3001/api/available?domain=${this.text}${ext}`);
                 
                 // tslint:disable-next-line:no-console
                 // console.log(res.data);

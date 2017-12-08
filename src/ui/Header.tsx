@@ -19,6 +19,7 @@ import * as ReactGA from 'react-ga';
 
 const logo = require('../logo.svg');
 const title = require('../namehacker.svg');
+const github = require('../github.svg');
 
 @observer
 class Header extends React.Component {
@@ -39,6 +40,13 @@ class Header extends React.Component {
                         <IconButton onClick={this.handleOpenHelp} style={{color: 'white'}}>
                             <HelpIcon/>
                         </IconButton>
+                        <Button style={{minWidth: 30, padding: 0}} onClick={this.handleClickGithub} color="primary">
+                            <img 
+                                src={github} 
+                                style={{ height: 20 }} 
+                                alt="github" 
+                            />
+                        </Button>
                     </Toolbar>
                 </AppBar>
                 <Dialog open={this.dialogShown} onRequestClose={this.handleCloseHelp}>
@@ -74,6 +82,10 @@ class Header extends React.Component {
             action: 'Open',
             label: 'App Help'
         });
+    }
+
+    handleClickGithub = (event: MouseEvent<HTMLElement>) => {
+        open('https://github.com/kolloldas/Namehacker');
     }
 }
 

@@ -1,45 +1,39 @@
-import { Array1D, Array2D, NDArray, NDArrayMath, NDArrayMathCPU, NDArrayMathGPU, Scalar, /* util */ } from 'deeplearn';
+import * as tf from '@tensorflow/tfjs-core';
 import { TextEncoder, TextDecoder } from 'text-encoding';
 
-const _PAD = 0;
-const _EOS = 1;
 const _SOS = 2;
 const RESERVED = 3;
 
-// const VOCAB_SIZE = 256;
 const MAX_LENGTH = 25;
 
 export default class Model {
 
-    private encoderLstmKernel: Array2D;
-    private encoderLstmBias: Array1D;
-    private decoderLstmKernel: Array2D;
-    private decoderLstmBias: Array1D;
+    private encoderLstmKernel: tf.Tensor2D;
+    private encoderLstmBias: tf.Tensor1D;
+    private decoderLstmKernel: tf.Tensor2D;
+    private decoderLstmBias: tf.Tensor1D;
 
-    private embedding: Array2D;
-    private outputDenseKernel: Array2D;
-    private outputDenseBias: Array1D;
+    private embedding: tf.Tensor2D;
+    private outputDenseKernel: tf.Tensor2D;
+    private outputDenseBias: tf.Tensor1D;
 
     private hiddenSize: number;
     private embeddingSize: number;
 
-    private math: NDArrayMath;
-
     private encoder: TextEncoder;
     private decoder: TextDecoder;
 
-    constructor(vars: { [varName: string]: NDArray }) {
-        this.math = this.getMathHandler(); // Temporary hack
-
+    constructor(vars: { [varName: string]: tf.Tensor }) {
+    
         // Save the parameter variables
-        this.encoderLstmKernel = vars['encoder/rnn/basic_lstm_cell/kernel'] as Array2D;
-        this.encoderLstmBias = vars['encoder/rnn/basic_lstm_cell/bias'] as Array1D;
-        this.decoderLstmKernel = vars['decoder/rnn/basic_lstm_cell/kernel'] as Array2D;
-        this.decoderLstmBias = vars['decoder/rnn/basic_lstm_cell/bias'] as Array1D;
+        this.encoderLstmKernel = vars['encoder/rnn/basic_lstm_cell/kernel'] as tf.Tensor2D;
+        this.encoderLstmBias = vars['encoder/rnn/basic_lstm_cell/bias'] as tf.Tensor1D;
+        this.decoderLstmKernel = vars['decoder/rnn/basic_lstm_cell/kernel'] as tf.Tensor2D;
+        this.decoderLstmBias = vars['decoder/rnn/basic_lstm_cell/bias'] as tf.Tensor1D;
         // tslint:disable-next-line:no-string-literal
-        this.embedding = vars['embedding'] as Array2D;
-        this.outputDenseKernel = vars['dense/kernel'] as Array2D;
-        this.outputDenseBias = vars['dense/bias'] as Array1D;
+        this.embedding = vars['embedding'] as tf.Tensor2D;
+        this.outputDenseKernel = vars['dense/kernel'] as tf.Tensor2D;
+        this.outputDenseBias = vars['dense/bias'] as tf.Tensor1D;
 
         this.hiddenSize = this.encoderLstmKernel.shape[1] / 4;
         this.embeddingSize = this.embedding.shape[1];
@@ -50,18 +44,20 @@ export default class Model {
 
     async predict(input: string, noiseLevel: number = 0.5): Promise<string> {
         const query = this.encode(input.toLowerCase());
-        const results: number[] = [];
-        await this.math.scope(async (keep, track) => {
-            const forgetBias = track(Scalar.new(1.0));
+        let resultIds: tf.Scalar[] = [];
 
-            let initialState = this.zeroState(this.hiddenSize);
-            let c = track(initialState[0]);
-            let h = track(initialState[1]);
+        resultIds = tf.tidy(() => {
+            const forgetBias = tf.scalar(1.0);
+            const innerResults: tf.Scalar[] = [];
+
+            let [c, h] = this.zeroState(this.hiddenSize);
 
             // Encoder
             query.forEach(index => {
-                const inputEncoderEmbed = this.math.slice2D(this.embedding, [index, 0], [1, this.embeddingSize]);
-                [c, h] = this.math.basicLSTMCell(
+
+                const inputEncoderEmbed = tf.slice2d(this.embedding, [index, 0], [1, this.embeddingSize]);
+                
+                [c, h] = tf.basicLSTMCell(
                     forgetBias,
                     this.encoderLstmKernel,
                     this.encoderLstmBias,
@@ -71,42 +67,50 @@ export default class Model {
             });
 
             // Add noise
-            const noiseC = track(Array2D.randNormal([1, this.hiddenSize], 0, noiseLevel));
-            const noiseH = track(Array2D.randNormal([1, this.hiddenSize], 0, noiseLevel));
+            const noiseC = tf.randomNormal([1, this.hiddenSize], 0, noiseLevel);
+            const noiseH = tf.randomNormal([1, this.hiddenSize], 0, noiseLevel);
 
-            c = this.math.add(c, track(noiseC)) as Array2D;
-            h = this.math.add(h, track(noiseH)) as Array2D;
+            c = tf.add(c, noiseC);
+            h = tf.add(h, noiseH);
 
-            let inputDecoder = _SOS;
+            let inputDecoder = tf.scalar(_SOS, 'int32');
             // Decoder
             for (let i = 0; i < MAX_LENGTH; i++) {
-                const inputDecoderEmbed = this.math.slice2D(
-                    this.embedding, [inputDecoder, 0],
-                    [1, this.embeddingSize]);
-                [c, h] = this.math.basicLSTMCell(
+                const inputDecoderEmbed = tf.gather(
+                    this.embedding, inputDecoder.as1D());
+
+                [c, h] = tf.basicLSTMCell(
                     forgetBias,
                     this.decoderLstmKernel,
                     this.decoderLstmBias,
                     inputDecoderEmbed,
                     c, h);
-                const output = this.math.matMul(h, this.outputDenseKernel);
-                const logits = this.math.add(output, this.outputDenseBias);
-                // const result = await this.math.argMax(logits).val();
 
-                const softmax = this.math.softmax(logits.as1D());
-                let softmaxPower = this.math.square(softmax);
-                softmaxPower = this.math.arrayDividedByScalar(softmaxPower, this.math.sum(softmaxPower));
-                const result = await this.math.multinomial(softmaxPower, 1).asScalar().val();
-
-                if (result === _EOS || result === _PAD) {
-                    break;
-                }
-
-                results.push(result);
+                const logits = h.matMul(this.outputDenseKernel).add(this.outputDenseBias);
+                const softmax = logits.as1D().softmax();
+                let softmaxPower = softmax.square();
+                softmaxPower = tf.div(softmaxPower, softmaxPower.sum());
+                const result = tf.multinomial(softmaxPower, 1, Math.random(), true).asScalar();
+                
+                innerResults.push(result);
                 inputDecoder = result;
+
             }
 
+            return innerResults;
         });
+
+        // tslint:disable-next-line:no-console
+        console.log('Tensors', tf.memory().numTensors);
+
+        let results: number[] = [];
+
+        for (let i = 0; i < resultIds.length; i++) {
+            let idVal: Uint8Array = await resultIds[i].data() as Uint8Array;
+            results.push(idVal[0]);
+
+            resultIds[i].dispose();
+        }
 
         return this.decode(results);
     }
@@ -125,25 +129,13 @@ export default class Model {
             } else {
                 return index - RESERVED;
             }
-        })));
+        }))).trim();
     }
 
-    private zeroState(hiddenSize: number): [Array2D] {
+    private zeroState(hiddenSize: number): [tf.Tensor2D, tf.Tensor2D] {
         return [
-            Array2D.zeros([1, hiddenSize]),
-            Array2D.zeros([1, hiddenSize])
+            tf.zeros([1, hiddenSize]),
+            tf.zeros([1, hiddenSize])
         ];
-    }
-
-    private getMathHandler(): NDArrayMath {
-        if ( navigator.userAgent.match('Edge') || navigator.vendor.match('Apple')) {
-            // tslint:disable-next-line:no-console
-            console.log('Using CPU');
-            return new NDArrayMathCPU();
-        } else {
-            // tslint:disable-next-line:no-console
-            console.log('Using GPU');
-            return new NDArrayMathGPU();
-        }
     }
 }

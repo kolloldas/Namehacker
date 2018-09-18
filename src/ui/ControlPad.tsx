@@ -1,8 +1,8 @@
 import * as React from 'react';
-import withStyles, { WithStyles } from 'material-ui/styles/withStyles';
-import Button from 'material-ui/Button';
-import ArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
-import Typography from 'material-ui/Typography';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import Button from '@material-ui/core/Button';
+import ArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import Typography from '@material-ui/core/Typography';
 import { /* observable, */ action } from 'mobx';
 import { observer } from 'mobx-react';
 import core, { namegen } from '../core';
@@ -16,7 +16,7 @@ interface Styles {
     helpText: object;
 }
 
-const Styled = withStyles((theme): Styles => ({
+const Styled = withStyles((theme) => ({
     root: {
         display: 'flex'
     },
@@ -63,7 +63,7 @@ class ControlPad extends React.Component<WithStyles<keyof Styles>> {
                 <div className={classes.root}>
                     <Button
                         disabled={!namegen.showControls || !namegen.hasPrevious}
-                        raised
+                        variant="raised"
                         color="primary"
                         onClick={this.handleClickPrev}
                         className={classes.buttonSmall}
@@ -72,7 +72,7 @@ class ControlPad extends React.Component<WithStyles<keyof Styles>> {
                     </Button>
                     <Button
                         disabled={!namegen.showControls}
-                        raised
+                        variant="raised"
                         color="primary"
                         onMouseDown={this.handleMouseDown}
                         onMouseUp={this.handleMouseUp}
@@ -85,7 +85,7 @@ class ControlPad extends React.Component<WithStyles<keyof Styles>> {
                 </div>
                 <div>
                     <Typography
-                        type="body1"
+                        variant="body1"
                         color="secondary"
                         className={classes.helpText}
                     >

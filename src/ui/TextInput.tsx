@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import withStyles, { WithStyles } from 'material-ui/styles/withStyles';
-import TextField from 'material-ui/TextField';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import TextField from '@material-ui/core/TextField';
 
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
@@ -14,7 +14,7 @@ interface Styles {
     textField: object;
 }
 
-const Styled = withStyles((theme): Styles => ({
+const Styled = withStyles((theme) => ({
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,

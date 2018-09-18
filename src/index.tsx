@@ -5,8 +5,8 @@ import registerServiceWorker from './registerServiceWorker';
 
 import './index.css';
 import 'typeface-roboto';
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import blue from 'material-ui/colors/blue';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import blue from '@material-ui/core/colors/blue';
 
 const theme = createMuiTheme({
   palette: {

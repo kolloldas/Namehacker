@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import { CircularProgress } from 'material-ui/Progress';
-import Typography from 'material-ui/Typography';
-import withStyles, { WithStyles } from 'material-ui/styles/withStyles';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import core from './core';
 
@@ -23,20 +23,14 @@ interface Styles {
   footer: object;
 }
 
-const Styled = withStyles((theme): Styles => ({
+const Styled = withStyles((theme) => ({
   top: {
     flexGrow: 1,
     marginTop: 30,
     padding: 10
   },
   content: {
-    padding: 20
-  },
-  footer: {
-    position: 'absolute',
-    left: 0,
-    bottom: 10,
-    right: 0
+    padding: 20,
   }
 }));
 
@@ -57,7 +51,7 @@ class App extends React.Component<WithStyles<keyof Styles>, object> {
         <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
             <CircularProgress/>
           <div>
-            <Typography type="body1" color="secondary" align="center">
+            <Typography variant="body1" color="secondary" align="center">
               Loading my brain..
             </Typography>
           </div>
@@ -65,7 +59,7 @@ class App extends React.Component<WithStyles<keyof Styles>, object> {
       );
     } else if (core.isError) {
       return (
-        <Typography type="body1" color="secondary" align="center">
+        <Typography variant="body1" color="secondary" align="center">
           Failed to load my brain
         </Typography>
       );
@@ -103,7 +97,7 @@ class App extends React.Component<WithStyles<keyof Styles>, object> {
         </Grid>
         </div>
         <footer className="site-footer">
-          <Typography type="body1" color="secondary" align="center">
+          <Typography variant="body1" color="secondary" align="center">
             © Kollol Das 2017
           </Typography>
         </footer>

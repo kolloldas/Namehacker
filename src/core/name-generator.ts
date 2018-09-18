@@ -1,5 +1,5 @@
 import { observable, action, useStrict, runInAction, computed } from 'mobx';
-import { CheckpointLoader } from 'deeplearn';
+import * as tf from '@tensorflow/tfjs-core';
 import Model from './model';
 import { ResultItem } from './result-item';
 
@@ -62,7 +62,9 @@ class NameGenerator {
     async loadModel() {
         this.state = State.LOADING;
         try {
-            const vars = await new CheckpointLoader('./data').getAllVariables();
+            const response = await fetch('./data/weights_manifest.json');
+            const manifest = await response.json();
+            const vars = await tf.io.loadWeights(manifest, './data');
 
             runInAction(() => {
                 // tslint:disable-next-line:no-console

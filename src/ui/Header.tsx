@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import HelpIcon from 'material-ui-icons/Help';
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import HelpIcon from '@material-ui/icons/Help';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
@@ -49,7 +48,7 @@ class Header extends React.Component {
                         </Button>
                     </Toolbar>
                 </AppBar>
-                <Dialog open={this.dialogShown} onRequestClose={this.handleCloseHelp}>
+                <Dialog open={this.dialogShown} onClose={this.handleCloseHelp}>
                     <DialogTitle>{'About'}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>

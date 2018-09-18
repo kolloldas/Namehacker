@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 
-import withStyles, { WithStyles } from 'material-ui/styles/withStyles';
-import Typography from 'material-ui/Typography';
-import { red, lightGreen, amber }  from 'material-ui/colors';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import Typography from '@material-ui/core/Typography';
+import { red, lightGreen, amber }  from '@material-ui/core/colors';
 
 import { MouseEvent } from 'react';
 
@@ -19,7 +19,7 @@ interface Styles {
     errorText: object;
 }
 
-const Styled = withStyles((theme): Styles => ({
+const Styled = withStyles((theme) => ({
     normalText: {
         color: theme.palette.primary[500]
     },
@@ -81,7 +81,7 @@ class MainResult extends React.Component<WithStyles<keyof Styles>> {
             <div style={{marginBottom: 20, minHeight: 130}}>
                 <div>
                     <Typography
-                        type="display3"
+                        variant="display3"
                         // gutterBottom
                         // color="primary"
                         className={this.domainCheckStatusStyle()}
@@ -93,7 +93,7 @@ class MainResult extends React.Component<WithStyles<keyof Styles>> {
                     </Typography>
                 </div>
                 <Typography
-                    type="body2"
+                    variant="body2"
                     // color="secondary"
                     className={this.domainCheckStatusStyle()}
                 >

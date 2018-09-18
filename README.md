@@ -1,5 +1,5 @@
 # Name Hacker
-A neural network based name generator that uses [deeplearn.js](http://deeplearnjs.org) to run inference right in the browser. Try out the [demo](https://namehacker.net)!
+A neural network based name generator that uses [Tensorflow.js](http://js.tensorflow.org) to run inference right in the browser. Try out the [demo](https://namehacker.net)!
 
 ### Features
 * Generates names based on a root word given by the user
@@ -21,8 +21,8 @@ The app will take a couple of seconds (on a decent connection) to load the model
 ### Model and Dataset
 In its core Name Hacker is simple encoder-decoder network into which we add a bit of gaussian noise after the encoding. The model was trained on dataset built from the freely available US trademarks database. A dictionary was used to find words sharing common prefixes with the trademarks. Such words were the inputs and the trademarks the targets. This formulation allows for more variations in the output. During inference we sample from the decoder outputs and also add gaussian noise to the encoder state.
 
-### Tensorflow and deeplearn.js
-The model was trained on Tensorflow and its parameters extracted to run on deeplearn.js. The tutorials provided are fairly clear on how to do this. The encoder-decoder model was coded in Typescript using the functions provided by deeplearn.js. The best part is that it uses webgl in the browser to run some of the ops as shaders leading to speedup in performance. Unfortunately it works fine only on Chrome and Firefox browsers. For Edge and Safari I have configured the model to run in the CPU. Later versions should fix the compatibility issues.
+### Tensorflow and Tensorflow.js
+The model was trained on Tensorflow and its parameters extracted to run on Tensorflow.js. The tutorials provided are fairly clear on how to do this. The encoder-decoder model was coded in Typescript using the functions provided by Tensorflow.js. The best part is that it uses webgl in the browser to run some of the ops as shaders leading to speedup in performance. Unfortunately it does not work properly in Safari. I'm trying to get to the root of the problem and hopefully fix this soon.
 
 ### Other components used
 The webapp uses [React](http://reactjs.org) for the UI and [MobX](https://mobx.js.org) for state management. Specifically it uses [TypeScript-React-Starter](https://github.com/Microsoft/TypeScript-React-Starter) boilerplate so it comes with all the powers of [create-react-app](https://github.com/facebookincubator/create-react-app). For styling it uses the slick [Material-UI-Next](https://material-ui-next.com/) library. For domain checking it makes a REST call to a tiny web service setup as Google Cloud Function. Please refer [GoDaddy Proxy](https://github.com/kolloldas/godaddy-proxy) for more details

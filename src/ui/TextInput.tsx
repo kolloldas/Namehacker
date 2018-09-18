@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import TextField from '@material-ui/core/TextField';
 
 import { observable, action } from 'mobx';
@@ -10,20 +11,18 @@ import { namegen } from '../core';
 import { ChangeEvent } from 'react';
 import { setTimeout, clearTimeout } from 'timers';
 
-interface Styles {
-    textField: object;
-}
-
-const Styled = withStyles((theme) => ({
+const styles = (theme: Theme) => createStyles({
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
         width: '90%',
       },
-  }));
+  });
+
+interface Props extends WithStyles<typeof styles> {}
 
 @observer
-class TextInput extends React.Component<WithStyles<keyof Styles>> {
+class TextInput extends React.Component<Props> {
     domainCheckTimer: NodeJS.Timer;
 
     @observable curInput: string = '';
@@ -71,4 +70,4 @@ class TextInput extends React.Component<WithStyles<keyof Styles>> {
     }
 }
 
-export default Styled<{}>(TextInput);
+export default withStyles(styles)(TextInput);

@@ -22,7 +22,7 @@ const github = require('../github.svg');
 
 @observer
 class Header extends React.Component {
-    @observable dialogShown: boolean;
+    @observable dialogShown: boolean = false;
     render() {
         return (
             <div>
@@ -52,7 +52,7 @@ class Header extends React.Component {
                     <DialogTitle>{'About'}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Name hacker is a neural network based name generator. It uses deeplearn.js 
+                            Name hacker is a neural network based name generator. It uses Tensorflow.js 
                             to run inference directly on the browser. <br/><br/>
                             Enter a root word and keep hitting 'HACK IT' to generate new and wonderful names!
                         </DialogContentText>

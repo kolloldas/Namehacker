@@ -1,5 +1,6 @@
 import * as React from 'react';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import Button from '@material-ui/core/Button';
 import ArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import Typography from '@material-ui/core/Typography';
@@ -9,14 +10,7 @@ import core, { namegen } from '../core';
 import { MouseEvent } from 'react';
 import { setTimeout, clearTimeout } from 'timers';
 
-interface Styles {
-    root: object;
-    buttonFull: object;
-    buttonSmall: object;
-    helpText: object;
-}
-
-const Styled = withStyles((theme) => ({
+const styles = (theme: Theme) => createStyles({
     root: {
         display: 'flex'
     },
@@ -31,10 +25,12 @@ const Styled = withStyles((theme) => ({
     helpText: {
         marginTop: theme.spacing.unit
     }
-}));
+});
+
+interface Props extends WithStyles<typeof styles> {}
 
 @observer
-class ControlPad extends React.Component<WithStyles<keyof Styles>> {
+class ControlPad extends React.Component<Props> {
     static readonly MIN_INTERVAL: number = 100;
     static readonly MAX_INTERVAL: number = 3000;
     static readonly MID_INTERVAL: number = (ControlPad.MAX_INTERVAL + ControlPad.MIN_INTERVAL) / 2;
@@ -86,7 +82,7 @@ class ControlPad extends React.Component<WithStyles<keyof Styles>> {
                 <div>
                     <Typography
                         variant="body1"
-                        color="secondary"
+                        color="textSecondary"
                         className={classes.helpText}
                     >
                         Tap and hold for continuous generation (Desktops only)
@@ -183,4 +179,4 @@ class ControlPad extends React.Component<WithStyles<keyof Styles>> {
     }
 }
 
-export default Styled<{}>(ControlPad);
+export default withStyles(styles)(ControlPad);

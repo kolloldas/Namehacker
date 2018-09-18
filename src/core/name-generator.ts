@@ -1,11 +1,10 @@
-import { observable, action, useStrict, runInAction, computed } from 'mobx';
+import { observable, action, runInAction, computed } from 'mobx';
 import * as tf from '@tensorflow/tfjs-core';
 import Model from './model';
 import { ResultItem } from './result-item';
 
 import * as ReactGA from 'react-ga';
 
-useStrict(true);
 enum State {
     INIT,
     LOADING,

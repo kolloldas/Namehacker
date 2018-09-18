@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import Typography from '@material-ui/core/Typography';
 import { red, lightGreen, amber }  from '@material-ui/core/colors';
 
@@ -12,14 +13,7 @@ import { namegen, AvailableStatus } from '../core';
 
 import * as ReactGA from 'react-ga';
 
-interface Styles {
-    normalText: object;
-    availableText: object;
-    unavailableText: object;
-    errorText: object;
-}
-
-const Styled = withStyles((theme) => ({
+const styles = (theme: Theme) => createStyles({
     normalText: {
         color: theme.palette.primary[500]
     },
@@ -32,10 +26,12 @@ const Styled = withStyles((theme) => ({
     errorText: {
         color: amber[500]
     }
-  }));
+  });
+
+interface Props extends WithStyles<typeof styles> {}
 
 @observer
-class MainResult extends React.Component<WithStyles<keyof Styles>> {
+class MainResult extends React.Component<Props> {
     domainCheckStatusText() {
 
         if (namegen.result) {
@@ -117,4 +113,4 @@ class MainResult extends React.Component<WithStyles<keyof Styles>> {
     }
 }
 
-export default Styled<{}>(MainResult);
+export default withStyles(styles)(MainResult);

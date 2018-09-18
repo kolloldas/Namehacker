@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core';
 
 import core from './core';
 
@@ -17,13 +17,7 @@ import ControlPad from './ui/ControlPad';
 
 import * as ReactGA from 'react-ga';
 
-interface Styles {
-  top: object;
-  content: object;
-  footer: object;
-}
-
-const Styled = withStyles((theme) => ({
+const styles = createStyles({
   top: {
     flexGrow: 1,
     marginTop: 30,
@@ -32,10 +26,12 @@ const Styled = withStyles((theme) => ({
   content: {
     padding: 20,
   }
-}));
+});
+
+interface Props extends WithStyles<typeof styles> {}
 
 @observer
-class App extends React.Component<WithStyles<keyof Styles>, object> {
+class App extends React.Component<Props> {
 
   componentDidMount() {
     core.loadModel();
@@ -51,7 +47,7 @@ class App extends React.Component<WithStyles<keyof Styles>, object> {
         <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
             <CircularProgress/>
           <div>
-            <Typography variant="body1" color="secondary" align="center">
+            <Typography variant="body1" color="textSecondary" align="center">
               Loading my brain..
             </Typography>
           </div>
@@ -59,7 +55,7 @@ class App extends React.Component<WithStyles<keyof Styles>, object> {
       );
     } else if (core.isError) {
       return (
-        <Typography variant="body1" color="secondary" align="center">
+        <Typography variant="body1" color="textSecondary" align="center">
           Failed to load my brain
         </Typography>
       );
@@ -97,8 +93,8 @@ class App extends React.Component<WithStyles<keyof Styles>, object> {
         </Grid>
         </div>
         <footer className="site-footer">
-          <Typography variant="body1" color="secondary" align="center">
-            © Kollol Das 2017
+          <Typography variant="body1" color="textSecondary" align="center">
+            © Kollol Das 2018
           </Typography>
         </footer>
       </div>
@@ -106,4 +102,4 @@ class App extends React.Component<WithStyles<keyof Styles>, object> {
   }
 }
 
-export default Styled<{}>(App);
+export default withStyles(styles)(App);

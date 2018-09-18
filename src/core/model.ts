@@ -101,7 +101,7 @@ export default class Model {
         });
 
         // tslint:disable-next-line:no-console
-        console.log('Tensors', tf.memory().numTensors);
+        // console.log('Tensors', tf.memory().numTensors);
 
         let results: number[] = [];
 
